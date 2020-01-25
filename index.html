@@ -16,6 +16,24 @@
 
 <style>
 
+  .battlefield {
+    display: flex;
+  }
+
+  .card-player {
+    border: 1px solid gray;
+    margin: 1em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .player-img {
+    height: 100px;
+    width: 100px;
+    background: pink;
+  }
+
 </style>
 
 </head>
@@ -31,7 +49,33 @@
 
     </section>
     <section class="" id="battlefield">
+      <div class="card-player player-1">
+        <form id="p-1-name">
+          <label for="p-1-input" class="name-tag" id="p-1-name-tag">Click here to enter your name</label>
+          <input id="p-1-name-input" name="p-1-input" type="text" placeholder="Enter your name...">
+        </form>
+        <img class="player-img" id="p-1-img" src="" alt="Choose your weapon...">
+        <button class="btn-weapon-select" id="p-1-rock" data-weapon="rock">Rock</button>
+        <button class="btn-weapon-select" id="p-1-paper" data-weapon="paper">Paper</button>
+        <button class="btn-weapon-select" id="p-1-scissors" data-weapon="scissors">Scissors</button>
+        <p>Wins: <span class="player-score" id="p-1-wins"></span></p>
+        <p>Losses: <span class="player-score" id="p-1-losses"></span></p>
+        <p>Draws: <span class="player-score" id="p-1-draws"></span></p>
+      </div>
 
+      <div class="card-player player-2">
+        <form id="p-2-name">
+          <label for="p-2-input" class="name-tag" id="p-2-name-tag">Click here to enter your name</label>
+          <input id="p-2-name-input" name="p-2-input" type="text" placeholder="Enter your name...">
+        </form>
+        <img class="player-img" id="p-2-img" src="" alt="Choose your weapon...">
+        <button class="btn-weapon-select" id="p-2-rock" data-weapon="rock">Rock</button>
+        <button class="btn-weapon-select" id="p-2-paper" data-weapon="paper">Paper</button>
+        <button class="btn-weapon-select" id="p-2-scissors" data-weapon="scissors">Scissors</button>
+        <p>Wins: <span class="player-score" id="p-2-wins"></span></p>
+        <p>Losses: <span class="player-score" id="p-2-losses"></span></p>
+        <p>Draws: <span class="player-score" id="p-2-draws"></span></p>
+      </div>
     </section>
   </mai
   n> 
@@ -45,6 +89,99 @@
 <script type="text/javascript">
 
 $(document).ready(function() { // jQuery start
+
+var state = {
+  gameCount: 0,
+  p1: {
+    loggedIn: false,
+    name: "",
+    armed: false,
+    weapon: "",
+    wins: 0,
+    losses: 0,
+    draws: 0,
+  },
+  p2: {
+    loggedIn: false,
+    name: "",
+    armed: false,
+    weapon: "",
+    wins: 0,
+    losses: 0,
+    draws: 0,
+  }
+}
+
+function newGame() {
+  $("#instructions").text("Enter a name.");
+  $("input").hide();
+  $(".btn-weapon-select").hide();
+
+  state = {
+  gameCount: 0,
+  p1: {
+    loggedIn: false,
+    name: "",
+    armed: false,
+    weapon: "",
+    wins: 0,
+    losses: 0,
+    draws: 0,
+  },
+  p2: {
+    loggedIn: false,
+    name: "",
+    armed: false,
+    weapon: "",
+    wins: 0,
+    losses: 0,
+    draws: 0,
+  }
+}
+}
+
+function playerEnterName() {
+  
+  var display = $(this).children("label");
+  var input = $(this).children("input");
+  display.hide();
+  input.show();
+  
+  // Update the username text as the user enters input
+  input.change( function() {
+    display.text(input.val());
+  });
+
+  // display the entered user name when the Enter key is pressed
+
+  $(this).submit( function(e) {
+    e.preventDefault();
+    input.hide();
+    display.show();
+    $(this).parent().siblings(".btn-weapon-select").show();
+  });
+
+  // display the entered user name when the input field loses focus
+  input.focusout( function() {
+    input.hide();
+    display.show();
+    $(this).parent().siblings(".btn-weapon-select").show();
+  });
+
+//  $(this).parent().children(".btn-weapon-select").show();
+  
+}
+
+function newRound(){
+  
+}
+
+function weaponSelect() {
+  var userChoice = $(this).attr("data-weapon");
+  $(this).siblings(".player-img").attr("alt",userChoice);
+}
+
+newGame();
 
 // player 1 and player 2 objects
   // username
@@ -64,6 +201,10 @@ $(document).ready(function() { // jQuery start
 // when both players have selected their weapons, execute client-side comparison and increment win/loss/draw counts and move to the next round
 
 // clear firebase when session ends OR implement auth and server-side matchmaking
+
+// Global listeners
+$(document).on("click","form",playerEnterName);
+$(document).on("click",".btn-weapon-select",weaponSelect);
 
 }); // jQuery end
 
